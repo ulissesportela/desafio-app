@@ -3,6 +3,8 @@ import React from 'react'
 
 import CadastroCliente from '../views/cadastro-cliente'
 import ConsultaCliente from '../views/consulta-clientes'
+import VisualizarCliente from '../views/visualizar-cliente'
+
 import Login from '../views/login'
 import Home from '../views/home'
 import Teste from '../views/teste'
@@ -18,6 +20,7 @@ function Rotas(){
                 <Route exact path={["/", "/login"]} component={Login}  />
                 <Route path="/cadastro-cliente" component={CadastroCliente} />
                 <Route path="/consulta-clientes" component={ConsultaCliente} />
+                <Route path="/visualizar-cliente" component={VisualizarCliente} />
                 <Route path="/teste" component={Teste} />
             </Switch>
         </HashRouter>

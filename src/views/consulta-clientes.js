@@ -7,13 +7,16 @@ import ClientesTable from './clientesTable'
 import ClienteService from '../app/service/clienteService'
 import * as messages from '../components/toastr'
 
+import LocalStorageService from '../app/service/localstorageService'
+
 class ConsultaClientes extends React.Component {
 
     state = {
         nome: '',
         showConfirmDialog: false,
         lancamentoDeletar: {},
-        clientes : []
+        clientes : [],
+        comun: true
     }
 
     constructor(){
@@ -22,6 +25,8 @@ class ConsultaClientes extends React.Component {
     }
 
     componentDidMount(){
+        const usuarioLogado = LocalStorageService.obterItem('_usuario_logado')
+        this.setState({comun: (usuarioLogado.login==='comun'?true:false)})
         this.buscar()
     }
     
@@ -45,6 +50,10 @@ class ConsultaClientes extends React.Component {
             })
     }
 
+    visualizar = (id) => {
+        this.props.history.push(`/visualizar-cliente/${id}`)
+    }
+    
     editar = (id) => {
         this.props.history.push(`/cadastro-cliente/${id}`)
     }
@@ -91,7 +100,8 @@ class ConsultaClientes extends React.Component {
                                     className="btn btn-success">
                                     <i className="pi pi-search"></i> Buscar
                             </button>
-                            <button onClick={this.preparaFormularioCadastro} 
+                            <button onClick={this.preparaFormularioCadastro}
+                                    hidden={this.state.comun}
                                     type="button" 
                                     className="btn btn-primary">
                                     <i className="pi pi-plus"></i> Cadastrar
@@ -111,8 +121,10 @@ class ConsultaClientes extends React.Component {
                         <div className="bs-component">
                             <ClientesTable clientes={this.state.clientes} 
                                               deleteAction={this.deletar}
+                                              viewAction={this.visualizar}
                                               editAction={this.editar}
-                                              alterarStatus={this.alterarStatus} />
+                                              alterarStatus={this.alterarStatus}
+                                              comun={this.state.comun} />
                         </div>
                     </div>  
                 </div> 

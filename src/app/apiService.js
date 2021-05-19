@@ -29,6 +29,11 @@ class ApiService {
         const requestUrl = `${this.apiurl}${url}`
         return httpClient.get(requestUrl)
     }
+
+    getApiExterna(url){
+        const requestUrl = `${url}`
+        return httpClient.get(requestUrl)
+    }
 }
 
 export default ApiService;

@@ -12,6 +12,11 @@ class Home extends React.Component{
         this.setState({login: usuarioLogado.login})
     }
 
+    sair = () => {
+        LocalStorageService.removerItem('_usuario_logado');
+        this.props.history.push('/login')
+    }
+
     render(){
         return (
             <div className="jumbotron">
@@ -25,6 +30,11 @@ class Home extends React.Component{
                     role="button"><i className="pi pi-users"></i>  
                      Clientes
                     </a>
+                    <button type="button"  title="Sair"
+                            className="btn btn-danger btn-lg" 
+                            onClick={this.sair} >
+                            <i className="pi pi-trash">Sair</i>
+                    </button>
                 </p>
             </div>
         )

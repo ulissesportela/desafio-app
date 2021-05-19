@@ -20,7 +20,17 @@ class ClienteService extends ApiService {
     }
 
     atualizar(cliente){
-        return this.put(`/${cliente.id}`, cliente);
+        const errosValidacao = this.validar(cliente)
+        if (errosValidacao && errosValidacao.length >0) {
+            errosValidacao.forEach((erroMsg, ingex) => {
+                mensagemErro(erroMsg)
+            });
+            return false
+        } else return this.put(`/${cliente.id}`, cliente);
+    }
+
+    consultaCep(cep) {
+        return this.getApiExterna('https://viacep.com.br/ws/'+cep+'/json/')
     }
 
     consultar(clienteFiltro){
@@ -42,6 +52,12 @@ class ClienteService extends ApiService {
 
         if(!cliente.nome){
             erros.push('O campo Nome é obrigatório.')
+        } else if(cliente.nome.length<=2) {
+            erros.push('O campo Nome deve ter no mínimo de 3 caracteres.')
+        } else if(cliente.nome.length>100) {
+            erros.push('O campo Nome deve ter no máximo de 100 caracteres.')
+        } else if( cliente.nome.match(/[^a-zA-ZÀ-Úà-ú 0-9]+/g) ){ ///[^a-zA-Z 0-9]+/g
+            erros.push('O campo Nome permite apenas letras, espaços e números.')
         }
         
         if(!cliente.cpf){
@@ -68,14 +84,12 @@ class ClienteService extends ApiService {
             erros.push('O campo UF é obrigatório.')
         }
 
-        if(!cliente.telefone){
+        if(!cliente.telefones.length > 0){
             erros.push('O campo Telefone é obrigatório.')
         }
 
-        if(!cliente.email){
+        if(!cliente.emails.length > 0){
             erros.push('O campo Email é obrigatório.')
-        }else if( !cliente.email.match(/^[a-z0-9.]+@[a-z0-9]+\.[a-z]/) ){
-            erros.push('Informe um Email válido.')
         }
 
         if(erros && erros.length > 0){
